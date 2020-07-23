@@ -12,7 +12,7 @@ module.exports = app => {
 
     // SETTINGS
     app.set('port', process.env.PORT || 3000);
-    app.set('views', path.join(__dirname, 'views'));
+    app.set('views', path.join(__dirname, '../views'));
     app.engine('.hbs', exphbs({         // Express-handlebars configuration
         defaultLayout: 'main',
         partialsDir: path.join(app.get('views'), 'partials'),

@@ -5,7 +5,7 @@
 const express = require('express');
 
 // Creamos la constante router
-const router = express.router();
+const router = express.Router();
 
 // Importamos los controladores
 const home = require('../controllers/home');
@@ -28,4 +28,6 @@ module.exports = app => {
     app.use(router);
 
 };
+
+
 
