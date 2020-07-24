@@ -7,9 +7,10 @@ const md5 = require('md5');
 
 // De esta forma solo tenemos que importar una
 // No hace falta añadir index a la ruta porque es el valor por defecto
-const { Image, Comment }= require('../models');
-const { json } = require('express');
-const { request } = require('http');
+const { Image, Comment } = require('../models');
+const sidebar =  require('../helpers/sidebar');
+// const { json } = require('express');
+// const { request } = require('http');
 
 
 
@@ -18,17 +19,23 @@ const ctrl = {};
 
 // Mostrar detalles de la imagen
 ctrl.index = async (req, res) => {
+    let viewModel = { image: {}, comments:{}};
+
     const image = await Image.findOne({filename: req.params.image_id});
 
     if(image){
         // Actualizar número de visitas y guardamos en la base de datos
         image.views = image.views + 1;
+        viewModel.image = image.toJSON();
         await image.save();
 
         // Cargar todos los comentarios de la imagen
         const comments = await Comment.find({image_id: image._id});
+        viewModel.comments = comments.map(comment => comment.toJSON());
 
-        res.render('image', {image: image.toJSON(), comments: comments.map(comment => comment.toJSON())});
+        viewModel = await sidebar(viewModel);
+
+        res.render('image', viewModel);
     }else{
         res.redirect('/');
     }

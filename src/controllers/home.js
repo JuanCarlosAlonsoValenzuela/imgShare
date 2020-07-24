@@ -3,13 +3,18 @@ const ctrl = {};
 
 const { Image } = require('../models');
 
+// Importamos sidebar
+const sidebar = require('../helpers/sidebar');
+
 ctrl.index = async (req, res) => {
-    // Busca todas las imágenes ordenadas por fecha de creación
-    // 1 para ascendente y -1 para descendente
     const images = await Image.find().sort({timestamp: -1});
 
-    // Pasamos las imágenes como parámetro dentro de corchetes
-    res.render('index', {"images": images.map(image => image.toJSON())});
+    let viewModel = {images: []};
+    viewModel.images = images.map(image => image.toJSON());
+
+    viewModel = await sidebar(viewModel);
+
+    res.render('index', viewModel);
 };
 
 // Exportamos
